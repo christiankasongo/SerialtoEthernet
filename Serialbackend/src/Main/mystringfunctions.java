@@ -1,6 +1,4 @@
-package main;
-
-import java.awt.Event;
+package Main;
 
 public class mystringfunctions {
 	
@@ -71,11 +69,5 @@ public class mystringfunctions {
 		}
 	
 	}
-
-		
-		
-			
-	
-
 
 

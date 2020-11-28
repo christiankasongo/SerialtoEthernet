@@ -1,40 +1,45 @@
 package main;
-
 import com.fazecast.jSerialComm.SerialPort;
-
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import jdk.nashorn.internal.runtime.regexp.joni.Regex;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.CheckBox;
 
-
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import javax.swing.JSplitPane;
 
 
 public class serial extends Application {
@@ -60,11 +65,11 @@ public class serial extends Application {
 		
 		private MenuBar mnu;
 		
-		private ComboBox <String> txtSend;
+		private TextField txtSend;
 		private Button cmdSend;
 		private ComboBox <String> cboTest;
-		//private CheckBox cr; // chkCR
-		//private CheckBox lf; // chkLR
+		private CheckBox cr;
+		private CheckBox lf;
 		
 	public serial() {
 		
@@ -216,23 +221,7 @@ public class serial extends Application {
 		hb.setSpacing(10);
 		hb.setPadding(new Insets(8,10,10,10));
 		
-		txtSend = new ComboBox <String> ();
-		txtSend.setPrefWidth(400);
-		//txtSend.setConverter(new Commandconverter());
-		//txtSend.setCellFactory(new CommandCellFactory());
-		//txtSend.setButtonCell(new CommandCell());
-		
-		txtSend.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>()
-        {
-            public void changed(ObservableValue<? extends Number> ov,
-                    final Number oldvalue, final Number newvalue)
-            {
-            	System.out.println(oldvalue.toString() + ", " + newvalue.toString());
-            	//indexChanged(newvalue);
-            }
-        });
-		
-		
+		txtSend = new TextField();
 		txtSend.setEditable(true);
 		txtSend.setOnKeyPressed(e -> {
 	        if (e.getCode() == KeyCode.ENTER) {
@@ -240,8 +229,6 @@ public class serial extends Application {
 	        	SendEx();
 	        }
 	    });
-		
-		txtSend.setPromptText("Enter a command");
 				
 		cmdSend = new Button("Send");
 		cmdSend.setOnAction(this::ButtonClick);
@@ -256,15 +243,13 @@ public class serial extends Application {
 		cboTest = new ComboBox <String> ();
 		ObservableList <String> Test = FXCollections.observableArrayList("blocking", "nonblocking");
 		cboTest.setItems(Test);
-		cboTest.setValue("blocking");
-		
-
-		
-		//cr = new CheckBox("CR");
-		//lf = new CheckBox("LF");
 		
 		
-		hb.getChildren().addAll(txtSend, cboTest, cmdSend);
+		cr = new CheckBox("CR");
+		lf = new CheckBox("LF");
+		
+		
+		hb.getChildren().addAll(txtSend, cboTest, cr, lf, cmdSend);
 		
 		return hb;
 				
@@ -312,42 +297,9 @@ public class serial extends Application {
 		itm.setOnAction(e -> System.exit(0));
 		tl.getItems().add(itm);
 		
-		tl = new Menu("Special Characters");
-		itm = new MenuItem("_Line Feed");
-		itm.setOnAction((event) -> {
-			AddSpecialChar(10);
-		});
-		tl.getItems().add(itm);
-		mnu.getMenus().add(tl);
-		
-		itm = new MenuItem("_Carriage Return");
-		itm.setOnAction((event) -> {
-			AddSpecialChar(13);
-		});
-		
-		tl.getItems().add(itm);
-		
-		itm = new MenuItem("_STX");
-		itm.setOnAction((event) -> {
-			AddSpecialChar(02);
-		});
-		tl.getItems().add(itm);
-		
-		itm = new MenuItem("_ETX");
-		itm.setOnAction((event) -> {
-			AddSpecialChar(03);
-		});
-		tl.getItems().add(itm);
-			
+	
 		return mnu;
 		
-	}
-	
-	private void AddSpecialChar(Integer i) {
-		String s = txtSend.getEditor().getText();
-		s += "&#" + String.format("%03d",i) + ";";
-		txtSend.getEditor().setText(s);
-		txtSend.getEditor().positionCaret(s.length());
 	}
 	
 	private void InitForm() {
@@ -408,7 +360,6 @@ public class serial extends Application {
 		endTime = System.currentTimeMillis();
 		System.out.println("time taken " + (endTime - startTime) + " milliseconds");
 		
-		
 		//do {
 		//	Thread.sleep(20);
 			
@@ -440,7 +391,7 @@ public class serial extends Application {
 		// time of whole do loop
 		startTime = System.currentTimeMillis();
 		do {
-			Thread.sleep(40);
+			Thread.sleep(20);
 					
 			toRead = port.bytesAvailable();
 				
@@ -448,7 +399,7 @@ public class serial extends Application {
 				tries += 1;
 						
 						
-				if (tries == 3)  {// || dataReceived) {
+				if (tries == 10)  {// || dataReceived) {
 					retry = false;
 				}
 				mystringfunctions.outputstring("Tries = " + String.valueOf(tries) + ", 0 Bytes available");
@@ -606,29 +557,23 @@ public class serial extends Application {
 	}
 	
 	private void SendEx() {
-	        StringBuffer cmd = new StringBuffer();
-	        Pattern pattern = Pattern.compile("&#([0-9][0-9][0-9]);");
-	        Matcher matcher = pattern.matcher(txtSend.getEditor().getText());
-	        String cmdlist = txtSend.getEditor().getText();
-	        String resList = "";
-	        Integer ascii;
-	        
-	        while (matcher.find()) { 
-	        	matcher.appendReplacement(cmd, ReplaceWithChar(matcher));
-	        }
-	        matcher.appendTail(cmd);
-	        
-	        byte mywb[] = cmd.toString().getBytes();
-			for (int i = 0; i < mywb.length; i++) {
-				System.out.println("Element " + String.valueOf(i) + " is: " + String.valueOf(mywb[i]));
+	        String cmd;
+	        String cmdlist;
+
+			cmd = txtSend.getText(); //mystringfunctions.LastCommand(newValue);
+			cmdlist = cmd;
+			
+			if(cr.isSelected() == true ) {
+				cmd = cmd + (char) 13;
+				cmdlist = cmdlist + "[CR]";
 			}
-	        
-			  //mystringfunctions.LastCommand(newValue);
 			
-			
-			if (ValidToSend()) { // (cmd.length() > 0)  {
-				if(!txtSend.getItems().contains(txtSend.getEditor().getText()))
-					txtSend.getItems().add(txtSend.getEditor().getText());
+			if(lf.isSelected() == true) {
+				cmd = cmd + (char) 10;
+				cmdlist = cmdlist + "[LF]";
+			}
+
+			if (cmd.length() > 0) {
 				
 				//if (psp.getPort() == null) {
 					
@@ -646,11 +591,11 @@ public class serial extends Application {
 					   // Protected code
 					String res; //SendAndReceive(cmd.toUpperCase(), psp.getPort(), psp.getBaud(), psp.getParity(), psp.getDataBits(), psp.getStopBits(), psp.getFlowControl());
 					if (cboTest.getValue() =="blocking")
-						res = SendAndReceive(cmd.toString(), psp.getPort(), psp.getBaud(), psp.getParity(), psp.getDataBits(), psp.getStopBits(), psp.getFlowControl());
+						res = SendAndReceive(cmd.toUpperCase(), psp.getPort(), psp.getBaud(), psp.getParity(), psp.getDataBits(), psp.getStopBits(), psp.getFlowControl());
 						else {
-							res = NonBlockingSendAndReceive(cmd.toString(), psp.getPort(), psp.getBaud(), psp.getParity(), psp.getDataBits(), psp.getStopBits(), psp.getFlowControl());
+							res = NonBlockingSendAndReceive(cmd.toUpperCase(), psp.getPort(), psp.getBaud(), psp.getParity(), psp.getDataBits(), psp.getStopBits(), psp.getFlowControl());
 						}
-						vp.addS(cmdlist);
+						vp.addS(cmdlist.toUpperCase());
 					
 					if (res.length() == 0) 
 						vp.addR("No response");
@@ -660,33 +605,16 @@ public class serial extends Application {
 						for (int i = 0; i < mywriteb.length; i++) {
 							System.out.println("Element " + String.valueOf(i) + " is: " + String.valueOf(mywriteb[i]));
 						}
-						
-						//add loop function for res
-						
-						for (int i = 0; i < res.length(); i++) {//(ascii = (int)res.charAt(i)) {
-							ascii =(int)res.charAt(i);
-						
-						
-							if (ascii <32 || ascii == 127) {
-								resList += "&#" + String.format("%03d;", ascii);
-							}
-						
-							else {
-								resList += res.charAt(i);
-							}
-						} 
-					}
-					
 						vp.addR(res);   //appendText(res + "\n");
-					}
+						}
 					
 					
 					
-					
+					} 
 				catch (Exception ex) {
 					   // Catch block
 					Alert alert = new Alert(AlertType.WARNING);
-					alert.setTitle("Unexpected error");
+					alert.setTitle("No port selected");
 					alert.setHeaderText(null);
 					alert.setContentText(ex.getMessage());
 					alert.showAndWait();
@@ -698,37 +626,7 @@ public class serial extends Application {
 			} 
 				
 		};
-		
-		private static String ReplaceWithChar(Matcher m) {
-			System.out.println(m.group(0).substring(2, 5));
-			return String.valueOf( (char) Integer.parseInt(m.group(0).substring(2, 5)));
-		}
 			
-	private boolean ValidToSend() {
-		//! means not true
-		
-		if (!psp.isPortselected()) {
-			Alert alert = new Alert(AlertType.WARNING);
-			alert.setTitle("No Port selected");
-			alert.setHeaderText(null);
-			alert.setContentText("Please select a port");
-			alert.showAndWait();
-		   
-		  return false;
-		}
-		
-		if (txtSend.getEditor().getText().length() == 0) {
-			Alert alert = new Alert(AlertType.WARNING);
-			alert.setTitle("No command entered");
-			alert.setHeaderText(null);
-			alert.setContentText("Please enter a command");
-			alert.showAndWait();
-			
-			return false;
-		}
-		
-		return true;
-	}
 	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -760,13 +658,6 @@ public static void main(String[] args) {
 	launch(args);
 	}
 
-//public void indexChanged(Number newValue) {
-//	
-//	CommandComboItem c = txtSend.getItems().get(newValue.intValue());
-//	cr.setSelected(c.Getcr());
-//	lf.setSelected(c.Getlf());
-//}
-
 private class AboutHandler implements EventHandler<ActionEvent> {
 
 	public void handle(ActionEvent e) {
@@ -775,11 +666,9 @@ private class AboutHandler implements EventHandler<ActionEvent> {
 		alert.setHeaderText(null);
 		alert.setContentText("Serial Communication via Internet (IP/TCP)");
 		alert.showAndWait();
-	
-	
 	}
+	
 }
 
 }
-
 	
