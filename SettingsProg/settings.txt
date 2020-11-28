@@ -1,0 +1,6 @@
+tty.AmiesBeatsSolo3-SPPServ
+4800
+1
+6
+2
+0
