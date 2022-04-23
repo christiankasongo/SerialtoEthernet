@@ -12,13 +12,13 @@ In the process of developing a reliable and dynamic software, different technolo
 The software “Serial via Network” is a desktop application, which is created by using JavaFX which is a software platform for creating and delivering desktop applications. Eclipse is one of the finest backend and front-end builder available in the market with ease of use and make the application to give a look of its profession.
 
 ### USE-CASE DIAGRAM
-<img align="right" src="https://raw.githubusercontent.com/christiankasongo/SerialtoEthernet/master/Screenshot%202022-04-23%20at%2010.38.46.png" height="350px">
+<img align="left" src="https://raw.githubusercontent.com/christiankasongo/SerialtoEthernet/master/Screenshot%202022-04-23%20at%2010.38.46.png" height="350px">
 
 To describe the model of a system’s dynamic behaviour is most important. Use case diagram consists of actors, use cases and relationships. The actors consist of internal and external agents. From the use case diagram, we can gather the system requirements. The factors which effect the internal and external features of the system can be obtained.
 
 <br/>
 <br/>
-
+<hr>
 
 
 ### SET UP
