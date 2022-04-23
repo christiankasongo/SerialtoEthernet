@@ -1,1 +1,4 @@
 # SerialtoEthernet
+
+The purpose of this project is to enhance the capabilities of serial driven automation storage system by allowing it to be controlled via a network. Modern computer retailers do not prioritise serial devices connectivity. Although, serial ports are still in use and more common in many industrial applications. Serial communication typically requires a wire, point to point cable connection, and it is limited by the length of the cable. To access a serial application on multiple devices will require separate RS232 cable and available ports. To overcome these factors a serial via network software will allow serial communication over LAN, this will share com ports over the network and connect to remote serial devices, in simple terms a protocol converter. Protocol Converter is a device used to convert standard or proprietary protocol of one device to the protocol suitable for the other device or tools to achieve the interoperability.
+
