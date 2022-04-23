@@ -14,7 +14,7 @@ The software “Serial via Network” is a desktop application, which is created
 ### USE-CASE DIAGRAM
 To describe the model of a system’s dynamic behaviour is most important. Use case diagram consists of actors, use cases and relationships. The actors consist of internal and external agents. From the use case diagram, we can gather the system requirements. The factors which effect the internal and external features of the system can be obtained.
 
-<img src="https://raw.githubusercontent.com/christiankasongo/SerialtoEthernet/master/Screenshot%202022-04-23%20at%2010.38.46.png" height="250px">
+<img src="https://raw.githubusercontent.com/christiankasongo/SerialtoEthernet/master/Screenshot%202022-04-23%20at%2010.38.46.png" height="350px" align="centre">
 
 
 
