@@ -16,6 +16,12 @@ To describe the model of a system’s dynamic behaviour is most important. Use c
 
 <img src="https://raw.githubusercontent.com/christiankasongo/SerialtoEthernet/master/Screenshot%202022-04-23%20at%2010.38.46.png" height="350px" align="centre">
 
+### SET UP
+<img src="https://raw.githubusercontent.com/christiankasongo/SerialtoEthernet/master/Screenshot%202022-04-23%20at%2010.43.56.png" height="400px" align="centre">
 
+Serial via Network software allows you to share COM ports over the network, from then the user can connect to remote serial devices as if it was connected directly to the user local computing or tablet device.
+The application is split into 3 separate programs, where two of the programs are already installed onto the raspberry pi. For first time usage, the raspberry pi will need to a keyboard, mouse and a monitor. The Pi will be connected to the network using either Ethernet cable or WIFI connection. From then a USB to serial cable will be used to connect the serial devices to the raspberry pi, lastly the power cable to start up the raspberry pi.
+When the Pi is turned on for the first time the server will time out as it will not be able to read any settings file. Therefore, it important to open the settings application and configure the settings to meet the requirements of the serial device you wish to communicate with.
+Using any operating system, the user can install the client application, once everything is set the user can then start to remote serial devices from their chosen computing or tablet device.
 
  
